@@ -309,6 +309,7 @@ $RECYCLE.BIN/
 .claude/
 local_docs/
 claudedocs/
+.archive/
 
 ### Serena ###
 .serena/
