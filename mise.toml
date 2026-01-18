@@ -1,0 +1,48 @@
+#:schema https://mise.jdx.dev/schema/mise.json
+# namegenerator - Random Name Generator Library
+# Inherits: go from root
+# Minimal config - zero dependencies library
+#
+# Usage:
+#   mise :test           - Run tests
+#   mise :test-race      - Run with race detector (important - NOT thread-safe!)
+#   mise :validate       - Full validation
+
+[env]
+PROJECT_NAME = "namegenerator"
+
+[tasks.test]
+description = "Run tests"
+run = "go test ./..."
+
+[tasks.test-v]
+description = "Run tests with verbose output"
+run = "go test -v ./..."
+
+[tasks.test-race]
+description = "Run tests with race detector (important - NOT thread-safe!)"
+run = "go test -race ./..."
+
+[tasks.test-cover]
+description = "Run tests with coverage"
+run = "go test -cover ./..."
+
+[tasks.fmt]
+description = "Format code"
+run = "go fmt ./..."
+
+[tasks.vet]
+description = "Run go vet"
+run = "go vet ./..."
+
+[tasks.tidy]
+description = "Tidy modules"
+run = "go mod tidy"
+
+[tasks.validate]
+description = "Full validation"
+depends = ["fmt", "vet", "tidy", "test"]
+
+[tasks.ci]
+description = "CI pipeline"
+depends = ["validate"]
