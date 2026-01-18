@@ -4,8 +4,8 @@
 
 A Go library for generating random, human-readable names by combining adjectives and nouns (e.g., "autumn-waterfall", "silent-moon").
 
-**Module**: `github.com/obot-platform/namegenerator`
-**Go Version**: 1.23.2+
+**Module**: `github.com/jrmatherly/namegenerator`
+**Go Version**: 1.25.0+
 **License**: Apache License 2.0
 
 ---
@@ -27,7 +27,7 @@ A Go library for generating random, human-readable names by combining adjectives
 ## Installation
 
 ```bash
-go get github.com/obot-platform/namegenerator
+go get github.com/jrmatherly/namegenerator
 ```
 
 ---
@@ -40,7 +40,7 @@ package main
 import (
     "fmt"
     "time"
-    "github.com/obot-platform/namegenerator"
+    "github.com/jrmatherly/namegenerator"
 )
 
 func main() {
@@ -210,7 +210,7 @@ package main
 import (
     "fmt"
     "time"
-    "github.com/obot-platform/namegenerator"
+    "github.com/jrmatherly/namegenerator"
 )
 
 func main() {
@@ -403,7 +403,7 @@ This library follows semantic versioning (SemVer):
 
 ## Contributing
 
-This library is maintained by [Acorn Labs, Inc.](http://acorn.io) under the obot-platform organization.
+This library is maintained by [Acorn Labs, Inc.](http://acorn.io), forked to the jrmatherly organization.
 
 **License**: Apache License 2.0
-**Repository**: https://github.com/obot-platform/namegenerator
+**Repository**: https://github.com/jrmatherly/namegenerator

@@ -1,3 +1,3 @@
-module github.com/obot-platform/namegenerator
+module github.com/jrmatherly/namegenerator
 
-go 1.23.2
+go 1.25.0

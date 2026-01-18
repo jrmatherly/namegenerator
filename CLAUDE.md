@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **namegenerator** is a lightweight Go library for generating random, human-readable names in the format `adjective-noun` (e.g., "silent-moon", "ancient-river"). It's designed for naming temporary resources like Docker containers, Kubernetes pods, test data, or temporary files.
 
-- **Module**: `github.com/obot-platform/namegenerator`
+- **Module**: `github.com/jrmatherly/namegenerator`
 - **Go Version**: 1.23.2
 - **Dependencies**: Zero external dependencies (uses only Go standard library)
 - **Size**: ~135 lines across 3 source files
@@ -251,7 +251,7 @@ The library exports exactly **5 symbols**:
 
 ## Module Path Migration Note
 
-The module was originally `github.com/acorn-io/namegenerator` and has been migrated to `github.com/obot-platform/namegenerator`. License headers and copyright notices reflect both Acorn Labs, Inc. (2022) and Goomba project Authors (2018) origins.
+The module was originally `github.com/acorn-io/namegenerator` and has been migrated to `github.com/jrmatherly/namegenerator`. License headers and copyright notices reflect both Acorn Labs, Inc. (2022) and Goomba project Authors (2018) origins.
 
 ## Workspace Integration
 

@@ -1,0 +1,144 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  GO_VERSION: "1.25"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Set up Go
+        uses: actions/setup-go@7a3fe6cf4cb3a834922a1244abfce67bcef6a0c5 # v6.2.0
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Verify dependencies
+        run: go mod verify
+
+      - name: Check formatting
+        run: |
+          if [ -n "$(gofmt -l .)" ]; then
+            echo "The following files are not formatted correctly:"
+            gofmt -l .
+            exit 1
+          fi
+
+      - name: Run go vet
+        run: go vet ./...
+
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        go-version: ["1.24", "1.25"]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Set up Go ${{ matrix.go-version }}
+        uses: actions/setup-go@7a3fe6cf4cb3a834922a1244abfce67bcef6a0c5 # v6.2.0
+        with:
+          go-version: ${{ matrix.go-version }}
+          cache: true
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Run tests
+        run: go test -v -race -coverprofile=coverage.out ./...
+
+      - name: Upload coverage
+        if: matrix.go-version == '1.25'
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: coverage
+          path: coverage.out
+          retention-days: 7
+
+  build:
+    needs: lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Set up Go
+        uses: actions/setup-go@7a3fe6cf4cb3a834922a1244abfce67bcef6a0c5 # v6.2.0
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+
+      - name: Build
+        run: go build ./...
+
+  summary:
+    name: CI Summary
+    if: always()
+    needs: [lint, test, build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check job results
+        run: |
+          echo "## CI Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          lint_result="${{ needs.lint.result }}"
+          test_result="${{ needs.test.result }}"
+          build_result="${{ needs.build.result }}"
+
+          echo "| Job | Result |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Lint | ${lint_result} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Test | ${test_result} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Build | ${build_result} |" >> $GITHUB_STEP_SUMMARY
+
+          failed=false
+
+          if [[ "$lint_result" == "failure" ]]; then
+            echo "Lint job failed"
+            failed=true
+          fi
+
+          if [[ "$test_result" == "failure" ]]; then
+            echo "Test job failed"
+            failed=true
+          fi
+
+          if [[ "$build_result" == "failure" ]]; then
+            echo "Build job failed"
+            failed=true
+          fi
+
+          if [[ "$failed" == "true" ]]; then
+            echo ""
+            echo "One or more jobs failed. See details above."
+            exit 1
+          fi
+
+          echo ""
+          echo "All jobs completed successfully."

@@ -5,7 +5,7 @@ A random name generator for acorns (for acorns, or whatever) implementation in G
 ## Install
 
 ```bash
-go get github.com/acorn-io/namegenerator
+go get github.com/jrmatherly/namegenerator
 ```
 
 ## Example of use
@@ -14,7 +14,7 @@ go get github.com/acorn-io/namegenerator
 package main
 
 import (
-    "github.com/obot-platform/namegenerator"
+    "github.com/jrmatherly/namegenerator"
 )
 
 func main() {
