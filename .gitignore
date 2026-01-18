@@ -312,6 +312,7 @@ claudedocs/
 .archive/
 
 ### Serena ###
-.serena/
+# Cache is excluded by .serena/.gitignore, memories are tracked
+.serena/cache/
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,terraform,go,python,windows,ansible,virtualenv
